@@ -66,18 +66,17 @@ def store_epsg(epsg_code, ogc_wkt):
     try:
         epsg_db[epsg_code] = {'epsgcode': epsg_code, 'ogcwkt': ogc_wkt}
     except:
-        raise ValueError('Failed to insert into CouchDB.')
+        print 'Failed to insert {0} into CouchDB.'.format(epsg_code)
 
-def load_epsg_couchdb(csv_name):
+def load_epsg_couchdb(csv_name, init_db=False):
     """
     Loads EPSG data from an epsg.org CSV file created using the GDAL utility
     into a local 'epsg' CouchDB database
     """
 
     # Delete and create the 'epsg' database
-    init_epsg_couchdb()
-    
-    epsg_db = connect_couchdb('epsg')
+    if (init_db):
+        init_epsg_couchdb()
 
     # Iterate over all the EPSG codes and place in CouchDB as unique documents
     with open(csv_name, 'rb') as csv_file:
